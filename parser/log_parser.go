@@ -50,7 +50,6 @@ func (lp *LogParser) SubscribeToBlocks() {
 	}
 	lp.sub = sub
 
-	//fmt.Print("\033[s")
 	for {
 		select {
 		case err := <-lp.sub.Err():
@@ -83,6 +82,8 @@ func (lp *LogParser) processLog(block ethtypes.Log) {
 		lp.lastTxIndex = block.TxIndex
 		lp.lastTxHash = block.TxHash
 	}
+
+	fmt.Println("") // TODO: remove this line - somehow tests are terminated without it, why?
 }
 
 // ProcessTx queries the transaction with the given
@@ -92,7 +93,6 @@ func (lp *LogParser) ProcessTx(txHash common.Hash) bool {
 	if err != nil {
 		fmt.Printf(" Failed to get transaction: %v", txHash.Hex())
 		return false
-		//log.Fatalf("\rFailed to get transaction: %v\n%v", txHash.Hex(), err)
 	}
 
 	if isPending {
