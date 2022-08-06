@@ -78,8 +78,8 @@ func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 	return blocknumber
 }
 
-// UpdateBlockNumber updates the label with the current block height.
-func (eg *ExplorerGUI) UpdateBlockNumber() {
+// UpdateGUI updates the label with the current block height.
+func (eg *ExplorerGUI) UpdateGUI() {
 	heightLabel := widget.NewLabel("Current blocknumber: " + fmt.Sprintf("%d", eg.lp.LastBlockNumber))
 	txIndexLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxIndex))
 	txHashLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxHash))

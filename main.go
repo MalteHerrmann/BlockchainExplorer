@@ -1,4 +1,4 @@
-// TrackGovernance can be used to inspect governance information
+// Explorer can be used to inspect governance information
 // on Evmos.
 package main
 
@@ -28,7 +28,7 @@ func main() {
 
 	go func() {
 		for range time.Tick(time.Second) {
-			gui.UpdateBlockNumber()
+			gui.UpdateGUI()
 		}
 	}()
 	gui.Window.ShowAndRun()

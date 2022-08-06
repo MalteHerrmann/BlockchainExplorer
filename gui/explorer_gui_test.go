@@ -20,11 +20,11 @@ func TestConnect(t *testing.T) {
 	require.NoError(t, err, "Failed to connect to the Ethereum client.")
 }
 
-func TestUpdateBlockNumber(t *testing.T) {
+func TestUpdateGUI(t *testing.T) {
 	pg := NewExplorerGUI()
 	_, err := pg.Connect(URL)
 	require.NoError(t, err, "Failed to connect to the Ethereum client.")
-	pg.UpdateBlockNumber()
+	pg.UpdateGUI()
 }
 
 func TestGetBlockNumber(t *testing.T) {
