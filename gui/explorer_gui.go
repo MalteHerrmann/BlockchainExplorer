@@ -80,9 +80,9 @@ func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 
 // UpdateGUI updates the label with the current block height.
 func (eg *ExplorerGUI) UpdateGUI() {
-	heightLabel := widget.NewLabel("Current blocknumber: " + fmt.Sprintf("%d", eg.lp.LastBlockNumber))
-	txIndexLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxIndex))
-	txHashLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxHash))
+	heightLabel := widget.NewLabel("Current blocknumber: \n" + fmt.Sprintf("%d", eg.lp.GetLastBlockNumber()))
+	txIndexLabel := widget.NewLabel("Current tx index: \n" + fmt.Sprintf("%d", eg.lp.GetLastTxIndex()))
+	txHashLabel := widget.NewLabel("Current tx index: \n" + fmt.Sprintf("%v", eg.lp.GetLastTxHash()))
 
 	// Create new v box to display the content
 	vbox := container.New(layout.NewVBoxLayout(), heightLabel, txIndexLabel, txHashLabel)

@@ -2,7 +2,6 @@ package logparser
 
 import (
 	"context"
-	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
@@ -22,11 +21,11 @@ type LogParser struct {
 	sub ethereum.Subscription
 
 	// Last seen block number
-	LastBlockNumber uint64
+	lastBlockNumber uint64
 
 	// Last seen transaction info
-	LastTxIndex uint
-	LastTxHash  common.Hash
+	lastTxIndex uint
+	lastTxHash  common.Hash
 
 	// Failed transactions
 	FailedTxs []common.Hash
@@ -38,6 +37,22 @@ func NewLogParser(client *ethclient.Client) *LogParser {
 		client: client,
 		logs:   make(chan ethtypes.Log),
 	}
+}
+
+// GetLastBlockNumber returns the last seen block number.
+func (lp *LogParser) GetLastBlockNumber() uint64 {
+	return lp.lastBlockNumber
+}
+
+// GetLastTxIndex returns the last seen transaction index.
+func (lp *LogParser) GetLastTxIndex() uint {
+	return lp.lastTxIndex
+}
+
+// GetLastTxHash returns the transaction hash of the last
+// seen transaction.
+func (lp *LogParser) GetLastTxHash() common.Hash {
+	return lp.lastTxHash
 }
 
 // SubscribeToBlocks subscribes to new blocks and processes the
@@ -65,41 +80,43 @@ func (lp *LogParser) SubscribeToBlocks() {
 func (lp *LogParser) processLog(block ethtypes.Log) {
 	currentBlocknumber := block.BlockNumber
 	currentTxIndex := block.TxIndex
-	fmt.Printf("\rBlock %d - tx %4d", currentBlocknumber, currentTxIndex)
+	//fmt.Printf("\rBlock %d - tx %4d", currentBlocknumber, currentTxIndex)
 
-	if currentBlocknumber > lp.LastBlockNumber {
-		lp.LastBlockNumber = currentBlocknumber
+	if currentBlocknumber > lp.lastBlockNumber {
+		lp.lastBlockNumber = currentBlocknumber
+		lp.lastTxIndex = 0
 	}
-	if currentTxIndex > lp.LastTxIndex {
+
+	if currentTxIndex > lp.lastTxIndex {
 		// always processes the last tx when a new tx comes in
-		ok := lp.ProcessTx(lp.LastTxHash)
+		ok := lp.ProcessTx(lp.lastTxHash)
 		if !ok {
-			lp.FailedTxs = append(lp.FailedTxs, lp.LastTxHash)
-			fmt.Printf(" Failed transactions: %v", len(lp.FailedTxs))
+			lp.FailedTxs = append(lp.FailedTxs, lp.lastTxHash)
+			//fmt.Printf(" Failed transactions: %v", len(lp.FailedTxs))
 		}
 
 		// Assign new tx info
-		lp.LastTxIndex = block.TxIndex
-		lp.LastTxHash = block.TxHash
+		lp.lastTxIndex = block.TxIndex
+		lp.lastTxHash = block.TxHash
 	}
 
-	fmt.Printf("") // TODO: remove this line - somehow tests are terminated without it, why?
+	//fmt.Printf("") // TODO: remove this line - somehow tests are terminated without it, why?
 }
 
 // ProcessTx queries the transaction with the given
 // transaction hash and processes the received information.
 func (lp *LogParser) ProcessTx(txHash common.Hash) bool {
-	_, isPending, err := lp.client.TransactionByHash(context.Background(), txHash)
+	_, _, err := lp.client.TransactionByHash(context.Background(), txHash)
 	if err != nil {
-		fmt.Printf(" Failed to get transaction: %v", txHash.Hex())
+		//fmt.Printf(" Failed to get transaction: %v", txHash.Hex())
 		return false
 	}
 
-	if isPending {
-		fmt.Printf(" Transaction %v is pending", txHash.Hex())
-	} else {
-		fmt.Printf(" Transaction %v is not pending", txHash.Hex())
-	}
+	//if isPending {
+	//fmt.Printf(" Transaction %v is pending", txHash.Hex())
+	//} else {
+	//fmt.Printf(" Transaction %v is not pending", txHash.Hex())
+	//}
 
 	return true
 }
