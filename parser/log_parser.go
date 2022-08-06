@@ -65,7 +65,7 @@ func (lp *LogParser) SubscribeToBlocks() {
 func (lp *LogParser) processLog(block ethtypes.Log) {
 	currentBlocknumber := block.BlockNumber
 	currentTxIndex := block.TxIndex
-	fmt.Printf("\rBlock %d - tx %d", currentBlocknumber, currentTxIndex)
+	fmt.Printf("\rBlock %d - tx %4d", currentBlocknumber, currentTxIndex)
 
 	if currentBlocknumber > lp.lastBlockNumber {
 		lp.lastBlockNumber = currentBlocknumber
@@ -83,7 +83,7 @@ func (lp *LogParser) processLog(block ethtypes.Log) {
 		lp.lastTxHash = block.TxHash
 	}
 
-	fmt.Println("") // TODO: remove this line - somehow tests are terminated without it, why?
+	fmt.Printf("") // TODO: remove this line - somehow tests are terminated without it, why?
 }
 
 // ProcessTx queries the transaction with the given
