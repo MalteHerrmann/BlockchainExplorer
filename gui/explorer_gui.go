@@ -7,7 +7,10 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	logparser "github.com/MalteHerrmann/TrackGovernance/parser"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -22,6 +25,9 @@ type ExplorerGUI struct {
 
 	// The client used to communicate with the node.
 	client *ethclient.Client
+
+	// The logparser used to track information
+	lp *logparser.LogParser
 }
 
 // NewExplorerGUI creates a new ExplorerGUI.
@@ -55,6 +61,13 @@ func (eg *ExplorerGUI) Connect(url string) (*ethclient.Client, error) {
 	return eg.client, nil
 }
 
+// GetParser returns the parser used to track information.
+func (eg *ExplorerGUI) GetParser() *logparser.LogParser {
+	eg.lp = logparser.NewLogParser(eg.client)
+
+	return eg.lp
+}
+
 // GetBlockNumber returns the current height of the blockchain.
 func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 	blocknumber, err := eg.client.BlockNumber(context.Background())
@@ -67,6 +80,12 @@ func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 
 // UpdateBlockNumber updates the label with the current block height.
 func (eg *ExplorerGUI) UpdateBlockNumber() {
-	label := widget.NewLabel("Current blocknumber: " + fmt.Sprintf("%d", eg.GetBlockNumber()))
-	eg.Window.SetContent(label)
+	heightLabel := widget.NewLabel("Current blocknumber: " + fmt.Sprintf("%d", eg.lp.LastBlockNumber))
+	txIndexLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxIndex))
+	txHashLabel := widget.NewLabel("Current tx index: " + fmt.Sprintf("%v", eg.lp.LastTxHash))
+
+	// Create new v box to display the content
+	vbox := container.New(layout.NewVBoxLayout(), heightLabel, txIndexLabel, txHashLabel)
+
+	eg.Window.SetContent(vbox)
 }

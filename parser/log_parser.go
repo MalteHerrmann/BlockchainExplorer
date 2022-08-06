@@ -22,11 +22,11 @@ type LogParser struct {
 	sub ethereum.Subscription
 
 	// Last seen block number
-	lastBlockNumber uint64
+	LastBlockNumber uint64
 
 	// Last seen transaction info
-	lastTxIndex uint
-	lastTxHash  common.Hash
+	LastTxIndex uint
+	LastTxHash  common.Hash
 
 	// Failed transactions
 	FailedTxs []common.Hash
@@ -67,20 +67,20 @@ func (lp *LogParser) processLog(block ethtypes.Log) {
 	currentTxIndex := block.TxIndex
 	fmt.Printf("\rBlock %d - tx %4d", currentBlocknumber, currentTxIndex)
 
-	if currentBlocknumber > lp.lastBlockNumber {
-		lp.lastBlockNumber = currentBlocknumber
+	if currentBlocknumber > lp.LastBlockNumber {
+		lp.LastBlockNumber = currentBlocknumber
 	}
-	if currentTxIndex > lp.lastTxIndex {
+	if currentTxIndex > lp.LastTxIndex {
 		// always processes the last tx when a new tx comes in
-		ok := lp.ProcessTx(lp.lastTxHash)
+		ok := lp.ProcessTx(lp.LastTxHash)
 		if !ok {
-			lp.FailedTxs = append(lp.FailedTxs, lp.lastTxHash)
+			lp.FailedTxs = append(lp.FailedTxs, lp.LastTxHash)
 			fmt.Printf(" Failed transactions: %v", len(lp.FailedTxs))
 		}
 
 		// Assign new tx info
-		lp.lastTxIndex = block.TxIndex
-		lp.lastTxHash = block.TxHash
+		lp.LastTxIndex = block.TxIndex
+		lp.LastTxHash = block.TxHash
 	}
 
 	fmt.Printf("") // TODO: remove this line - somehow tests are terminated without it, why?

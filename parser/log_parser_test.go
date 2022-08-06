@@ -38,9 +38,9 @@ func TestNewLogParser(t *testing.T) {
 			lp := NewLogParser(tc.client)
 			require.Equal(t, lp.client, tc.client, "client should be set")
 			require.Equal(t, lp.sub, nil, "sub should be initialized")
-			require.Equal(t, lp.lastBlockNumber, uint64(0), "lastBlockNumber should be 0")
-			require.Equal(t, lp.lastTxIndex, uint(0), "lastTxIndex should be 0")
-			require.Equal(t, lp.lastTxHash, common.Hash{}, "lastTxHash should be zero-value for hash type")
+			require.Equal(t, lp.LastBlockNumber, uint64(0), "lastBlockNumber should be 0")
+			require.Equal(t, lp.LastTxIndex, uint(0), "LastTxIndex should be 0")
+			require.Equal(t, lp.LastTxHash, common.Hash{}, "LastTxHash should be zero-value for hash type")
 		})
 	}
 }
@@ -54,7 +54,7 @@ func TestProcessLog(t *testing.T) {
 
 	// Process log
 	lp.processLog(ethtypes.Log{})
-	require.Equal(t, lp.lastBlockNumber, uint64(0), "lastBlockNumber should be 0")
-	require.Equal(t, lp.lastTxIndex, uint(0), "lastTxIndex should be 0")
-	require.Equal(t, lp.lastTxHash, common.Hash{}, "lastTxHash should be zero-value for hash type")
+	require.Equal(t, lp.LastBlockNumber, uint64(0), "lastBlockNumber should be 0")
+	require.Equal(t, lp.LastTxIndex, uint(0), "LastTxIndex should be 0")
+	require.Equal(t, lp.LastTxHash, common.Hash{}, "LastTxHash should be zero-value for hash type")
 }

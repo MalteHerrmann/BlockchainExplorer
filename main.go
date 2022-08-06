@@ -21,6 +21,11 @@ func main() {
 	fmt.Println("Connected to Ethereum client at " + url)
 	fmt.Println("")
 
+	lp := gui.GetParser()
+	go func() {
+		lp.SubscribeToBlocks()
+	}()
+
 	go func() {
 		for range time.Tick(time.Second) {
 			gui.UpdateBlockNumber()
