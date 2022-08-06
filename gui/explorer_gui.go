@@ -35,7 +35,7 @@ func NewExplorerGUI() *ExplorerGUI {
 	eg.Window.Resize(fyne.NewSize(800, 600))
 
 	// Add label with current block height
-	label := widget.NewLabel("Current blocknumber: ")
+	label := widget.NewLabel("Waiting for info...")
 
 	// Assign content to window
 	eg.Window.SetContent(label)
