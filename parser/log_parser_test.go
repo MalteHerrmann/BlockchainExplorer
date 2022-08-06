@@ -37,12 +37,10 @@ func TestNewLogParser(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			lp := NewLogParser(tc.client)
 			require.Equal(t, lp.client, tc.client, "client should be set")
-			require.Equal(t, lp.logs, make(chan ethtypes.Log), "logs should be initialized")
 			require.Equal(t, lp.sub, nil, "sub should be initialized")
 			require.Equal(t, lp.lastBlockNumber, uint64(0), "lastBlockNumber should be 0")
 			require.Equal(t, lp.lastTxIndex, uint(0), "lastTxIndex should be 0")
 			require.Equal(t, lp.lastTxHash, common.Hash{}, "lastTxHash should be zero-value for hash type")
-			require.Equal(t, lp.FailedTxs, []common.Hash{}, "FailedTxs should be initialized")
 		})
 	}
 }
