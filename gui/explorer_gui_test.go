@@ -1,8 +1,9 @@
 package explorergui
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 const (
@@ -10,27 +11,28 @@ const (
 )
 
 func TestNewExplorerGUI(t *testing.T) {
-	pg := NewExplorerGUI()
-	require.NotNil(t, pg, "ExplorerGui struct could not be created.")
+	eg := NewExplorerGUI()
+	require.NotNil(t, eg, "ExplorerGui struct could not be created.")
 }
 
 func TestConnect(t *testing.T) {
-	pg := NewExplorerGUI()
-	_, err := pg.Connect(URL)
+	eg := NewExplorerGUI()
+	_, err := eg.Connect(URL)
 	require.NoError(t, err, "Failed to connect to the Ethereum client.")
 }
 
 func TestUpdateGUI(t *testing.T) {
-	pg := NewExplorerGUI()
-	_, err := pg.Connect(URL)
+	eg := NewExplorerGUI()
+	_, err := eg.Connect(URL)
 	require.NoError(t, err, "Failed to connect to the Ethereum client.")
-	pg.UpdateGUI()
+	// TODO: implement logparser for this test
+	eg.UpdateGUI()
 }
 
 func TestGetBlockNumber(t *testing.T) {
-	pg := NewExplorerGUI()
-	_, err := pg.Connect(URL)
+	eg := NewExplorerGUI()
+	_, err := eg.Connect(URL)
 	require.NoError(t, err, "Failed to connect to the Ethereum client.")
-	blocknumber := pg.GetBlockNumber()
+	blocknumber := eg.GetBlockNumber()
 	require.NotNil(t, blocknumber, "Blocknumber could not be retrieved.")
 }
