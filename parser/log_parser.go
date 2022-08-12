@@ -2,11 +2,12 @@ package logparser
 
 import (
 	"context"
+	"log"
+
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"log"
 )
 
 // LogParser is a type that can be used to parse logs.
@@ -75,6 +76,11 @@ func (lp *LogParser) SubscribeToBlocks() {
 	}
 }
 
+// Unsubscribe unsubscribes from the current subscription.
+func (lp *LogParser) Unsubscribe() {
+	lp.sub.Unsubscribe()
+}
+
 // ProcessLog is responsible for the further processing of a received
 // log.
 func (lp *LogParser) processLog(block ethtypes.Log) {
@@ -107,16 +113,5 @@ func (lp *LogParser) processLog(block ethtypes.Log) {
 // transaction hash and processes the received information.
 func (lp *LogParser) ProcessTx(txHash common.Hash) bool {
 	_, _, err := lp.client.TransactionByHash(context.Background(), txHash)
-	if err != nil {
-		//fmt.Printf(" Failed to get transaction: %v", txHash.Hex())
-		return false
-	}
-
-	//if isPending {
-	//fmt.Printf(" Transaction %v is pending", txHash.Hex())
-	//} else {
-	//fmt.Printf(" Transaction %v is not pending", txHash.Hex())
-	//}
-
-	return true
+	return err == nil
 }

@@ -4,9 +4,10 @@ package main
 
 import (
 	"fmt"
-	explorergui "github.com/MalteHerrmann/TrackGovernance/gui"
 	"log"
 	"time"
+
+	explorergui "github.com/MalteHerrmann/TrackGovernance/gui"
 )
 
 func main() {

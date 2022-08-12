@@ -1,12 +1,13 @@
 package logparser
 
 import (
+	"testing"
+
 	"github.com/MalteHerrmann/TrackGovernance/testutil"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestNewLogParser(t *testing.T) {
@@ -59,5 +60,15 @@ func TestProcessLog(t *testing.T) {
 	lp.processLog(ethtypes.Log{})
 	require.Equal(t, lp.lastBlockNumber, uint64(0), "lastBlockNumber should be 0")
 	require.Equal(t, lp.lastTxIndex, uint(0), "lastTxIndex should be 0")
+	require.Equal(t, lp.lastTxHash, common.Hash{}, "lastTxHash should be zero-value for hash type")
+
+	// Process a log with a new empty transaction
+	lp.processLog(ethtypes.Log{
+		BlockNumber: 1,
+		TxIndex:     2,
+		TxHash:      common.Hash{},
+	})
+	require.Equal(t, lp.lastBlockNumber, uint64(1), "lastBlockNumber should be 1")
+	require.Equal(t, lp.lastTxIndex, uint(2), "lastTxIndex should be 2")
 	require.Equal(t, lp.lastTxHash, common.Hash{}, "lastTxHash should be zero-value for hash type")
 }
