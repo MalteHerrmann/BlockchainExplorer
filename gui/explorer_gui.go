@@ -5,6 +5,7 @@ package explorergui
 import (
 	"context"
 	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -28,6 +29,12 @@ type ExplorerGUI struct {
 
 	// The logparser used to track information
 	lp *logparser.LogParser
+
+	// The label to display the last seen block number
+	heightLabel *widget.Label
+
+	// The label to display the last seen transaction index
+	txIndexLabel *widget.Label
 }
 
 // NewExplorerGUI creates a new ExplorerGUI.
@@ -36,15 +43,26 @@ func NewExplorerGUI() *ExplorerGUI {
 
 	eg.app = app.New()
 	eg.Window = eg.app.NewWindow("Blockchain Parser")
+	eg.Window.SetMaster()
 
 	// Set Window size
 	eg.Window.Resize(fyne.NewSize(800, 600))
 
+	// TODO: Create entry for url and connect button + connection indicator (check mark or cross)
+	// TODO: Add stop button for GUI
+
 	// Add label with current block height
-	label := widget.NewLabel("Waiting for info...")
+	waitLabel := widget.NewLabel("Waiting for info...")
+	waitLabel.Alignment = fyne.TextAlignCenter
+
+	// initialize label
+	eg.heightLabel = widget.NewLabel("Current blocknumber\n")
+	eg.heightLabel.Alignment = fyne.TextAlignCenter
+	eg.txIndexLabel = widget.NewLabel("Current tx index\n")
+	eg.txIndexLabel.Alignment = fyne.TextAlignCenter
 
 	// Assign content to window
-	eg.Window.SetContent(label)
+	eg.Window.SetContent(waitLabel)
 
 	return eg
 }
@@ -79,13 +97,18 @@ func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 }
 
 // UpdateGUI updates the label with the current block height.
+// TODO: Create binding instead of creating a new container every time
 func (eg *ExplorerGUI) UpdateGUI() {
-	heightLabel := widget.NewLabel("Current blocknumber: \n" + fmt.Sprintf("%d", eg.lp.GetLastBlockNumber()))
-	txIndexLabel := widget.NewLabel("Current tx index: \n" + fmt.Sprintf("%d", eg.lp.GetLastTxIndex()))
-	txHashLabel := widget.NewLabel("Current tx index: \n" + fmt.Sprintf("%v", eg.lp.GetLastTxHash()))
+	lastBlockNumber := eg.lp.GetLastBlockNumber()
+	lastTxIndex := eg.lp.GetLastTxIndex()
 
-	// Create new v box to display the content
-	vbox := container.New(layout.NewVBoxLayout(), heightLabel, txIndexLabel, txHashLabel)
+	if lastBlockNumber != 0 {
+		eg.heightLabel.SetText(fmt.Sprintf("Current blocknumber\n%d", lastBlockNumber))
+		eg.txIndexLabel.SetText(fmt.Sprintf("Current transaction index\n%d", lastTxIndex))
 
-	eg.Window.SetContent(vbox)
+		// Create new v box to display the content
+		vbox := container.New(layout.NewVBoxLayout(), eg.heightLabel, eg.txIndexLabel)
+
+		eg.Window.SetContent(vbox)
+	}
 }
