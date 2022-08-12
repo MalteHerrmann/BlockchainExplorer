@@ -51,18 +51,17 @@ func NewExplorerGUI() *ExplorerGUI {
 	// TODO: Create entry for url and connect button + connection indicator (check mark or cross)
 	// TODO: Add stop button for GUI
 
-	// Add label with current block height
-	waitLabel := widget.NewLabel("Waiting for info...")
-	waitLabel.Alignment = fyne.TextAlignCenter
-
-	// initialize label
+	// Initialize label
 	eg.heightLabel = widget.NewLabel("Current blocknumber\n")
 	eg.heightLabel.Alignment = fyne.TextAlignCenter
 	eg.txIndexLabel = widget.NewLabel("Current tx index\n")
 	eg.txIndexLabel.Alignment = fyne.TextAlignCenter
 
-	// Assign content to window
-	eg.Window.SetContent(waitLabel)
+	// Define layout
+	hbox := container.New(layout.NewGridLayout(2), eg.heightLabel, eg.txIndexLabel)
+
+	// Add content to window
+	eg.Window.SetContent(hbox)
 
 	return eg
 }
@@ -97,7 +96,6 @@ func (eg *ExplorerGUI) GetBlockNumber() uint64 {
 }
 
 // UpdateGUI updates the label with the current block height.
-// TODO: Create binding instead of creating a new container every time
 func (eg *ExplorerGUI) UpdateGUI() {
 	lastBlockNumber := eg.lp.GetLastBlockNumber()
 	lastTxIndex := eg.lp.GetLastTxIndex()
@@ -105,10 +103,5 @@ func (eg *ExplorerGUI) UpdateGUI() {
 	if lastBlockNumber != 0 {
 		eg.heightLabel.SetText(fmt.Sprintf("Current blocknumber\n%d", lastBlockNumber))
 		eg.txIndexLabel.SetText(fmt.Sprintf("Current transaction index\n%d", lastTxIndex))
-
-		// Create new v box to display the content
-		vbox := container.New(layout.NewVBoxLayout(), eg.heightLabel, eg.txIndexLabel)
-
-		eg.Window.SetContent(vbox)
 	}
 }
