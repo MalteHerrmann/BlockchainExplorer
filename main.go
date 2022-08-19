@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	explorergui "github.com/MalteHerrmann/TrackGovernance/gui"
+	explorergui "github.com/MalteHerrmann/BlockchainExplorer/gui"
 )
 
 func main() {

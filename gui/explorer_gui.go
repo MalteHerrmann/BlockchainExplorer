@@ -11,7 +11,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
-	logparser "github.com/MalteHerrmann/TrackGovernance/parser"
+	logparser "github.com/MalteHerrmann/BlockchainExplorer/parser"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 

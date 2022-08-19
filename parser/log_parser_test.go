@@ -3,7 +3,7 @@ package logparser
 import (
 	"testing"
 
-	"github.com/MalteHerrmann/TrackGovernance/testutil"
+	"github.com/MalteHerrmann/BlockchainExplorer/testutil"
 	"github.com/ethereum/go-ethereum/common"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"

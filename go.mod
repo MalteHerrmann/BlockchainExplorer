@@ -1,4 +1,4 @@
-module github.com/MalteHerrmann/TrackGovernance
+module github.com/MalteHerrmann/BlockchainExplorer
 
 go 1.18
 
