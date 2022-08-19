@@ -137,6 +137,10 @@ func (lp *LogParser) processLog(block ethtypes.Log) {
 // ProcessTx queries the transaction with the given
 // transaction hash and processes the received information.
 func (lp *LogParser) ProcessTx(txHash common.Hash) bool {
+	// Return true if the tx Hash is the null value
+	if (txHash == common.Hash{}) {
+		return true
+	}
 	_, _, err := lp.client.TransactionByHash(context.Background(), txHash)
 	return err == nil
 }
