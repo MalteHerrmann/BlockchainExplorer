@@ -3,6 +3,7 @@ package logparser
 import (
 	"context"
 	"log"
+	"math/big"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -23,6 +24,9 @@ type LogParser struct {
 
 	// Last seen block number
 	lastBlockNumber uint64
+
+	// Number of transactions in the last block
+	nTxInLastBlock int
 
 	// Last seen transaction info
 	lastTxIndex uint
@@ -66,6 +70,12 @@ func (lp *LogParser) GetLastTxHash() common.Hash {
 	return lp.lastTxHash
 }
 
+// GetNumberOfTransactionsInLastBlock returns the number of transactions
+// contained in the last seen block.
+func (lp *LogParser) GetNumberOfTransactionsInLastBlock() int {
+	return lp.nTxInLastBlock
+}
+
 // SubscribeToBlocks subscribes to new blocks and processes the
 // received information.
 func (lp *LogParser) SubscribeToBlocks() {
@@ -96,10 +106,15 @@ func (lp *LogParser) Unsubscribe() {
 func (lp *LogParser) processLog(block ethtypes.Log) {
 	currentBlocknumber := block.BlockNumber
 	currentTxIndex := block.TxIndex
-	//fmt.Printf("\rBlock %d - tx %4d", currentBlocknumber, currentTxIndex)
 
 	if currentBlocknumber > lp.lastBlockNumber {
+		currentBlock, err := lp.client.BlockByNumber(context.Background(), big.NewInt(int64(currentBlocknumber)))
+		if err != nil {
+			log.Fatalf("Failed to get block %d: %v", currentBlocknumber, err)
+		}
+		txs := currentBlock.Transactions()
 		lp.lastBlockNumber = currentBlocknumber
+		lp.nTxInLastBlock = len(txs)
 		lp.lastTxIndex = 0
 	}
 
