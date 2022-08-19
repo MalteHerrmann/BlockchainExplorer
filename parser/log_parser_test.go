@@ -49,6 +49,45 @@ func TestNewLogParser(t *testing.T) {
 	}
 }
 
+func TestNewLogParserWithURL(t *testing.T) {
+	// Define testcases
+	testcases := []struct {
+		name    string
+		url     string
+		expPass bool
+	}{
+		{
+			"url is empty",
+			"",
+			false,
+		},
+		{
+			"url is invalid",
+			"invalid url",
+			false,
+		},
+		{
+			"url is valid",
+			"http://localhost:8545",
+			true,
+		},
+	}
+
+	// Run tests
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			lp, err := NewLogParserWithURL(tc.url)
+			if tc.expPass {
+				require.NoError(t, err, "NewLogParserWithURL should not return an error")
+				require.NotNil(t, lp, "NewLogParserWithURL should return a LogParser")
+			} else {
+				require.Error(t, err, "NewLogParserWithURL should return an error")
+				require.Nil(t, lp, "NewLogParserWithURL should return a LogParser")
+			}
+		})
+	}
+}
+
 func TestProcessLog(t *testing.T) {
 	// Prepare tests
 	client, err := testutil.SetupClientForTesting()

@@ -40,6 +40,16 @@ func NewLogParser(client *ethclient.Client) *LogParser {
 	}
 }
 
+// NewLogParserWithURL creates a new LogParser and sets up
+// the connection to an ethereum client at the given URL.
+func NewLogParserWithURL(url string) (*LogParser, error) {
+	client, err := ethclient.Dial(url)
+	if err != nil {
+		return nil, err
+	}
+	return NewLogParser(client), nil
+}
+
 // GetLastBlockNumber returns the last seen block number.
 func (lp *LogParser) GetLastBlockNumber() uint64 {
 	return lp.lastBlockNumber
